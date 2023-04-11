@@ -3,6 +3,7 @@ import json
 from ..reports.simple_report import SimpleReport
 from ..reports.complete_report import CompleteReport
 import pathlib
+import xmltodict
 
 
 class Inventory:
@@ -18,11 +19,18 @@ class Inventory:
             return json.load(file)
 
     @staticmethod
+    def xml_reader(path):
+        with open(path, encoding="utf8") as file:
+            return xmltodict.parse(file.read())["dataset"]["record"]
+
+    @staticmethod
     def file_reader(path):
         if pathlib.Path(path).suffix == ".csv":
             return Inventory.csv_reader(path)
         elif pathlib.Path(path).suffix == ".json":
             return Inventory.json_reader(path)
+        elif pathlib.Path(path).suffix == ".xml":
+            return Inventory.xml_reader(path)
         else:
             raise ValueError("File is not a valid format")
 
