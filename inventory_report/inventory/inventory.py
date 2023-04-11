@@ -1,38 +1,22 @@
-import csv
-import json
 from ..reports.simple_report import SimpleReport
 from ..reports.complete_report import CompleteReport
+from ..importer.csv_importer import CsvImporter
+from ..importer.json_importer import JsonImporter
+from ..importer.xml_importer import XmlImporter
 import pathlib
-import xmltodict
 
 
 class Inventory:
     @staticmethod
-    def csv_reader(path):
-        with open(path, encoding="utf8") as file:
-            reader = csv.DictReader(file)
-            return list(reader)
-
-    @staticmethod
-    def json_reader(path):
-        with open(path, encoding="utf8") as file:
-            return json.load(file)
-
-    @staticmethod
-    def xml_reader(path):
-        with open(path, encoding="utf8") as file:
-            return xmltodict.parse(file.read())["dataset"]["record"]
-
-    @staticmethod
     def file_reader(path):
         if pathlib.Path(path).suffix == ".csv":
-            return Inventory.csv_reader(path)
+            return CsvImporter.import_data(path)
         elif pathlib.Path(path).suffix == ".json":
-            return Inventory.json_reader(path)
+            return JsonImporter.import_data(path)
         elif pathlib.Path(path).suffix == ".xml":
-            return Inventory.xml_reader(path)
+            return XmlImporter.import_data(path)
         else:
-            raise ValueError("File is not a valid format")
+            raise ValueError("Invalid file extension")
 
     @staticmethod
     def import_data(path, type):
