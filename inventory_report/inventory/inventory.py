@@ -1,4 +1,5 @@
 import csv
+import json
 from ..reports.simple_report import SimpleReport
 from ..reports.complete_report import CompleteReport
 import pathlib
@@ -11,9 +12,17 @@ class Inventory:
             reader = csv.DictReader(file)
             return list(reader)
 
+    @staticmethod
+    def json_reader(path):
+        with open(path, encoding="utf8") as file:
+            return json.load(file)
+
+    @staticmethod
     def file_reader(path):
         if pathlib.Path(path).suffix == ".csv":
             return Inventory.csv_reader(path)
+        elif pathlib.Path(path).suffix == ".json":
+            return Inventory.json_reader(path)
         else:
             raise ValueError("File is not a valid format")
 
