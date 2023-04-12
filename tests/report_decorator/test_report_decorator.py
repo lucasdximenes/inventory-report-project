@@ -1,6 +1,11 @@
 from inventory_report.reports.colored_report import ColoredReport
 from inventory_report.reports.simple_report import SimpleReport
 
+GREEN = "\033[32m"
+BLUE = "\033[36m"
+RED = "\033[31m"
+CLOSE = "\033[0m"
+
 product_list = [
     {
         "id": "1",
@@ -58,12 +63,14 @@ product_list = [
     },
 ]
 
+expected_result = (
+    f"{GREEN}Data de fabricação mais antiga:{CLOSE} {BLUE}2020-12-06{CLOSE}\n"
+    f"{GREEN}Data de validade mais próxima:{CLOSE} {BLUE}2023-09-17{CLOSE}\n"
+    f"{GREEN}Empresa com mais produtos:{CLOSE} {RED}Moore Medical LLC{CLOSE}"
+)
+
 
 def test_decorar_relatorio():
     simple_report = SimpleReport()
     colored_report = ColoredReport(simple_report)
-    assert colored_report.generate(product_list) == (
-        "\033[32mData de fabricação mais antiga:\033[36m 2020-12-06\033[0m]]"
-        "\033[32mData de validade mais próxima:\033[36m 2023-09-17\033[0m]]"
-        "\033[32mEmpresa com mais produtos:\033[31m Moore Medical LLC\033[0m]]"
-    )
+    assert colored_report.generate(product_list) == expected_result
